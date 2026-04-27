@@ -1,0 +1,332 @@
+1. Why Attention Was Needed
+
+Before attention, many models used:
+
+RNN (Recurrent Neural Networks)
+LSTM
+GRU
+
+They processed words one by one.
+
+Example:
+
+"The animal didn’t cross the street because it was tired."
+
+To understand it, model must remember earlier words.
+
+Problem:
+
+Long sentences = hard memory
+Important words forgotten
+Slow training
+Solution: Attention
+
+Instead of remembering everything in one hidden state, model can look back at all words and choose what matters.
+
+2. Simple Intuition
+
+Imagine reading:
+
+“The cat sat on the mat.”
+
+When predicting next word after “sat”, model may focus on:
+
+cat
+sat
+mat
+
+Different words get different importance scores.
+
+That importance = attention weights
+
+3. Core Idea of Attention
+
+For each word, calculate:
+
+Which other words are relevant?
+How strongly should I look at them?
+
+Then combine useful information.
+
+4. Query, Key, Value (Most Important Concept)
+
+Every token becomes 3 vectors:
+
+Query (Q) = what I am searching for
+Key (K) = what I offer / identity
+Value (V) = actual information
+Analogy: Library
+
+You ask for books about Python:
+
+Query = your request
+Keys = book labels
+Values = book contents
+
+Match query with keys → retrieve values.
+
+5. Mathematical Formula
+
+Main formula:
+
+Attention(Q,K,V)=softmax(
+d
+k
+	​
+
+	​
+
+QK
+T
+	​
+
+)V
+
+Meaning:
+Multiply Query and Key → similarity scores
+Divide by √dk → stabilize values
+Softmax → convert to probabilities
+Multiply by V → weighted result
+6. Why divide by √dₖ ?
+
+If vectors are large dimension:
+
+dot products become large
+softmax becomes too sharp
+gradients become unstable
+
+So divide by √dₖ to normalize scores.
+
+7. Self-Attention
+
+Most common type.
+
+A sentence attends to itself.
+
+Example:
+
+“The animal didn’t cross the street because it was tired.”
+
+Word it attends strongly to animal.
+
+Each token checks all other tokens.
+
+8. Types of Attention
+A. Self-Attention
+
+Input attends to itself.
+
+Used in Transformers.
+
+B. Cross-Attention
+
+One sequence attends to another.
+
+Example:
+
+Translator decoding English sentence
+Decoder attends to encoded French sentence
+C. Global Attention
+
+Look at all tokens.
+
+D. Local Attention
+
+Look only nearby tokens.
+
+Good for efficiency.
+
+E. Additive Attention (Bahdanau)
+
+Older method using small neural network.
+
+F. Multiplicative / Dot Product Attention
+
+Uses dot product.
+
+Faster and common today.
+
+9. Multi-Head Attention
+
+Instead of one attention, use many heads.
+
+Each head learns different relationships:
+
+grammar
+position
+meaning
+dependencies
+
+Formula:
+
+MultiHead(Q,K,V)=Concat(head
+1
+	​
+
+,...,head
+h
+	​
+
+)W
+O
+
+Why useful:
+
+One head may learn subject-verb relation.
+Another may learn pronouns.
+Another may learn position.
+
+10. Transformer Architecture
+
+Two main parts:
+
+Encoder
+
+Reads input.
+
+Decoder
+
+Generates output.
+
+Each layer contains:
+
+Multi-head attention
+Feed-forward network
+Residual connection
+Layer normalization
+11. Encoder Attention
+
+Uses self-attention.
+
+Every token sees all tokens.
+
+12. Decoder Attention
+
+Uses:
+
+Masked Self-Attention
+
+Can only see previous tokens.
+
+Prevents cheating future words.
+
+Cross-Attention
+
+Looks at encoder output.
+
+13. Positional Encoding
+
+Attention has no natural order.
+
+Sentence:
+
+dog bites man
+man bites dog
+
+Need positions.
+
+So add position vectors.
+
+Common sinusoidal:
+
+PE
+(pos,2i)
+	​
+
+=sin(pos/10000
+2i/d
+)
+
+14. Attention in NLP
+
+Used in:
+
+Translation
+Summarization
+Chatbots
+Search
+Question answering
+Text generation
+
+Examples:
+
+BERT, GPT, T5
+
+15. Attention in Computer Vision
+
+Vision Transformer (ViT)
+
+Image split into patches.
+
+Each patch attends to others.
+
+Used in:
+
+image classification
+object detection
+segmentation
+16. Advantages of Attention
+
+✅ Handles long-range dependencies
+✅ Parallel training (faster than RNN)
+✅ Better context understanding
+✅ Interpretable (see weights)
+✅ Scalable
+
+17. Problems of Attention
+A. Expensive
+
+Complexity:
+
+O(n
+2
+)
+
+Long text = expensive memory.
+
+B. Needs lots of data
+C. Can hallucinate in LLMs
+18. Efficient Attention Variants
+
+To solve O(n²):
+
+Linformer
+Performer
+Longformer
+Reformer
+FlashAttention
+
+Used for long documents.
+
+19. Attention Visualization
+
+Can draw heatmaps showing which words attend to which.
+
+Useful for learning and debugging.
+
+20. Real Example
+
+Sentence:
+
+“I went to the bank to deposit money.”
+
+Word bank attends to:
+
+deposit
+money
+
+So model knows bank = financial bank, not river bank.
+
+21. In Large Language Models
+
+Models like GPT-4 use stacked transformer blocks with attention layers.
+
+They predict next token by using context from previous tokens.
+
+22. Short Summary
+
+Attention means:
+
+“Look at the most relevant parts of the input before deciding output.”
+
+It is the main reason modern AI became powerful.
